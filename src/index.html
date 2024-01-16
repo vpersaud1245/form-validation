@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -6,6 +6,106 @@
     <title><%=htmlWebpackPlugin.options.title%></title>
   </head>
   <body>
-    <h1>Test</h1>
+    <h1 class="form__title">Form validation</h1>
+    <form class="form" novalidate>
+      <!-- Email -->
+      <div class="form__item form__item--email">
+        <label class="form__label form__label--email" for="email">Email</label>
+        <input
+          class="form__input form__input--email"
+          type="email"
+          name="email"
+          required
+        />
+        <span class="form-item__error-message form-item__error-message--email"
+          >Field is required</span
+        >
+      </div>
+
+      <!-- Country -->
+      <div class="form__item form__item--country">
+        <label class="form__label form__label--country" for="country"
+          >Country</label
+        >
+        <select
+          class="form__select form__select--country"
+          name="country"
+          required
+        >
+          <option value="US">US</option>
+          <option value="CA">CA</option>
+        </select>
+        <span
+          class="form-item__error-message form-item__error-message--country"
+        ></span>
+      </div>
+
+      <!-- Zipcode -->
+      <div class="form__item form__item--zipcode">
+        <label class="form__label form__label--zipcode" for="zipcode"
+          >Zipcode</label
+        >
+        <input
+          class="form__input form__input--zipcode"
+          type="number"
+          required
+        />
+        <span
+          class="form-item__error-message form-item__error-message--zipcode"
+        ></span>
+      </div>
+
+      <!-- Password -->
+      <div class="form__item form__item--password">
+        <label class="form__label form__label--password" for="password"
+          >Password</label
+        >
+        <input
+          class="form__input form__input--password"
+          type="password"
+          name="password"
+          minlength="8"
+          required
+        />
+        <ul class="password-item__validation-checklist">
+          <li
+            class="password-checklist__list-item password-checklist__list-item--min-chars"
+          >
+            Must be at least 8 characters
+          </li>
+          <li
+            class="password-checklist__list-item password-checklist__list-item--capital"
+          >
+            First letter must be capital
+          </li>
+          <li
+            class="password-checklist__list-item password-checklist__list-item--min-nums"
+          >
+            Must include 1 number
+          </li>
+        </ul>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form__item form__item--confirm-password">
+        <label
+          class="form__label form__label--confirm-password"
+          for="confirm-password"
+          >Confirm Password</label
+        >
+        <input
+          class="form__input form__input--confirm-password"
+          type="password"
+          name="confirm-password"
+          required
+          minlength="8"
+        />
+        <span
+          class="form-item__error-message form-item__error-message--confirm-password"
+        ></span>
+      </div>
+
+      <button class="form__submit-btn" type="submit">Submit</button>
+    </form>
   </body>
 </html>

@@ -41,3 +41,98 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+:root {
+  --form-width: 300px;
+  --pri-font-family: -apple-system, system-ui, sans-serif;
+  --submit-btn-width: 150px;
+}
+
+body {
+  font-family: var(--pri-font-family);
+  display: grid;
+  place-content: center;
+  height: 100vh;
+}
+
+.form__title {
+  font-size: 2rem;
+  margin: 10px auto;
+}
+
+/*
+  ---- FORM ----
+*/
+
+.form {
+  /* Flex Properties */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  /* Sizing & Borders*/
+  width: var(--form-width);
+  border: 2px solid black;
+  border-radius: 10px;
+  padding: 1.5rem 1.5rem;
+
+  /* Font Properties */
+  font-size: 14px;
+}
+
+.form__item {
+  display: flex;
+  flex-direction: column;
+}
+
+.form__input {
+  outline: none;
+  border-radius: 5px;
+  border: 1px solid black;
+}
+
+.form__select {
+  height: 25px;
+  border-radius: 5px;
+}
+
+.form__submit-btn {
+  margin: 10px auto;
+  width: var(--submit-btn-width);
+}
+
+.form__submit-btn:hover {
+  cursor: pointer;
+}
+
+/*
+  ---- FORM ERROR MESSAGE ----
+*/
+
+.form-item__error-message {
+  display: none;
+  height: 20px;
+  border: 1px solid darkred;
+  border-radius: 0 0 5px 5px;
+
+  background-color: darkred;
+  color: white;
+
+  font-size: 12px;
+  text-align: center;
+  vertical-align: center;
+}
+
+/*
+  ---- PASSWORD VALIDATION CHECKLIST -----
+*/
+
+.password-item__validation-checklist {
+  display: none;
+  padding: 5px;
+  list-style: none;
+}
+
+.password-checklist__list-item {
+  color: darkred;
+}
