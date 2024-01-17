@@ -1,5 +1,10 @@
 import "./style.css";
 
+/* ----- ADD EMAIL VALIDATION ----- */
+const email = document.querySelector(".form__input--email");
+const emailErrorField = document.querySelector(
+  ".form-item__error-message--email",
+);
 /**
  * Displays error messages and styles for an email input field.
  *
@@ -8,21 +13,40 @@ import "./style.css";
  * and sets specific error messages based on validation criteria.
  */
 function showEmailErrors() {
-  const email = document.querySelector(".form__input--email");
-  const errorField = document.querySelector(".form-item__error-message--email");
   // Display error field
-  errorField.style.display = "inline-block";
+  emailErrorField.style.display = "inline-block";
   // Style email input field with error styles
   email.style.border = "1px solid darkred";
   email.style.borderRadius = "5px 5px 0 0";
   if (email.validity.valueMissing) {
-    errorField.textContent = `Email cannot be empty`;
+    emailErrorField.textContent = `Email cannot be empty`;
     return;
   }
   if (email.validity.typeMismatch) {
-    errorField.textContent = `Must be a valid email address`;
+    emailErrorField.textContent = `Must be a valid email address`;
   }
 }
+
+// Provide live validation on email input
+email.addEventListener("input", () => {
+  if (!email.validity.valid) {
+    showEmailErrors();
+    return;
+  }
+  if (email.validity.valid) {
+    // Reset email input and error fields to default styles
+    emailErrorField.style.display = "none";
+    emailErrorField.textContent = "";
+    email.style.border = "1px solid black";
+    email.style.borderRadius = "5px";
+  }
+});
+
+/* ----- ADD ZIPCODE VALIDATION ----- */
+const zipcode = document.querySelector(".form__input--zipcode");
+const zipcodeErrorField = document.querySelector(
+  ".form-item__error-message--zipcode",
+);
 
 /**
  * Handles validation and error display for a zipcode input field.
@@ -31,34 +55,53 @@ function showEmailErrors() {
  * It displays error messages and styles based on the length and specific key events.
  * Additionally, it prevents input beyond the valid length and clears errors at the appropriate length.
  */
-function showZipcodeErrors(e) {
-  const zipcodeField = document.querySelector(".form__input--zipcode");
-  const currentZipcodeFieldLength = zipcodeField.value.length;
-  const zipcodeErrorField = document.querySelector(
-    ".form-item__error-message--zipcode",
-  );
+function showZipcodeErrors() {
+  const currentZipcodeFieldLength = zipcode.value.length;
   // Display error message if length is less than 5
-  if (currentZipcodeFieldLength < 4 || e.key === "Backspace") {
+  if (currentZipcodeFieldLength <= 4) {
     zipcodeErrorField.style.display = "inline-block";
     zipcodeErrorField.textContent = "Must be a valid zipcode";
-    zipcodeField.style.border = "1px solid darkred";
-    zipcodeField.style.borderRadius = "5px 5px 0 0";
-    return;
-  }
-  // Prevents inputs longer than 5 characters
-  if (currentZipcodeFieldLength > 4 && e.key !== "Backspace") {
-    e.preventDefault();
+    zipcode.style.border = "1px solid darkred";
+    zipcode.style.borderRadius = "5px 5px 0 0";
     return;
   }
   // Clears error message at appropriate length
-  if (currentZipcodeFieldLength === 4) {
+  if (currentZipcodeFieldLength === 5) {
     zipcodeErrorField.style.display = "none";
     zipcodeErrorField.textContent = "";
-    zipcodeField.style.border = "1px solid black";
-    zipcodeField.style.borderRadius = "5px";
+    zipcode.style.border = "1px solid black";
+    zipcode.style.borderRadius = "5px";
   }
 }
 
+// Prevents input on zipcodes longer than 5 characters
+zipcode.addEventListener("keydown", (e) => {
+  if (zipcode.value.length > 4 && e.key !== "Backspace") {
+    e.preventDefault();
+  }
+});
+
+// Provide live validation on email input
+zipcode.addEventListener("keyup", (e) => {
+  // Input will only accept number input or backspace
+  const isNumberRegex = /^[0-9]$/;
+  if (e.key.match(isNumberRegex) || e.key === "Backspace") {
+    showZipcodeErrors();
+  }
+  // Displays error message while deleting due to length not being met
+  if (e.key === "Backspace") {
+    zipcodeErrorField.style.display = "inline-block";
+    zipcodeErrorField.textContent = "Must be a valid zipcode";
+    zipcode.style.border = "1px solid darkred";
+    zipcode.style.borderRadius = "5px 5px 0 0";
+  }
+});
+
+/* ----- ADD PASSWORD VALIDATION ----- */
+const password = document.querySelector(".form__input--password");
+const passwordChecklist = document.querySelector(
+  ".password-item__validation-checklist",
+);
 /**
  * Validates a password based on specified criteria and
  * updates checklist items accordingly.
@@ -67,7 +110,6 @@ function showZipcodeErrors(e) {
  * and the presence of at least one number.
  */
 function checkPasswordValidation() {
-  const password = document.querySelector(".form__input--password");
   // Get password checklist list items
   const minCharItem = document.querySelector(
     ".password-checklist__list-item--min-chars",
@@ -82,7 +124,7 @@ function checkPasswordValidation() {
   const atLeastOneNumberRegex = /\d/;
 
   // Check for minimum password length
-  if (password.value.length >= 7) {
+  if (password.value.length >= 8) {
     minCharItem.style.color = "green";
   } else {
     minCharItem.style.color = "darkred";
@@ -103,15 +145,33 @@ function checkPasswordValidation() {
   }
 }
 
+// DISPLAY PASSWORD CHECKLIST
+password.addEventListener("focus", () => {
+  passwordChecklist.style.display = "block";
+  checkPasswordValidation();
+});
+// REMOVE PASSWORD CHECKLIST
+password.addEventListener("blur", (e) => {
+  const submitBtn = document.querySelector(".form__submit-btn");
+  // Checklist will remain open if submit btn is clicked for form validation
+  if (e.relatedTarget !== submitBtn) {
+    passwordChecklist.style.display = "none";
+  }
+});
+
+// Check for password validation on each input
+password.addEventListener("input", checkPasswordValidation);
+
+/* ----- ADD CONFIRM PASSWORD VALIDATION ----- */
+const confirmPassword = document.querySelector(
+  ".form__input--confirm-password",
+);
 function showConfirmPasswordErrors() {
   const passwordValue = document.querySelector(".form__input--password").value;
-  const confirmPassword = document.querySelector(
-    ".form__input--confirm-password",
-  );
   const confirmPasswordErrorField = document.querySelector(
     ".form-item__error-message--confirm-password",
   );
-
+  // Display error is confirm password field is empty
   if (confirmPassword.validity.valueMissing) {
     confirmPasswordErrorField.style.display = "inline-block";
     confirmPasswordErrorField.textContent = "Confirm password cannot be empty";
@@ -119,7 +179,7 @@ function showConfirmPasswordErrors() {
     confirmPassword.style.borderRadius = "5px 5px 0 0";
     return;
   }
-
+  // Display error if passwords dont match
   if (confirmPassword.value !== passwordValue) {
     confirmPasswordErrorField.style.display = "inline-block";
     confirmPasswordErrorField.textContent = "Passwords do not match";
@@ -128,62 +188,62 @@ function showConfirmPasswordErrors() {
     return;
   }
 
+  // Removes error fields
   confirmPasswordErrorField.style.display = "none";
   confirmPasswordErrorField.textContent = "";
   confirmPassword.style.border = "1px solid black";
   confirmPassword.style.borderRadius = "5px";
 }
 
-// ADD EMAIL VALIDATION
-const email = document.querySelector(".form__input--email");
-email.addEventListener("input", () => {
-  const emailErrorField = document.querySelector(
-    ".form-item__error-message--email",
-  );
-  if (!email.validity.valid) {
-    showEmailErrors();
-    return;
-  }
-  if (email.validity.valid) {
-    // Reset email input and error fields to default styles
-    emailErrorField.style.display = "none";
-    emailErrorField.textContent = "";
-    email.style.border = "1px solid black";
-    email.style.borderRadius = "5px";
-  }
-});
-
-// ADD ZIPCODE VALIDATION
-const zipcode = document.querySelector(".form__input--zipcode");
-zipcode.addEventListener("keydown", (e) => {
-  const isNumberRegex = /^[0-9]$/;
-  if (e.key.match(isNumberRegex) || e.key === "Backspace") {
-    showZipcodeErrors(e);
-  }
-});
-
-// ADD PASSWORD VALIDATION
-const password = document.querySelector(".form__input--password");
-const passwordChecklist = document.querySelector(
-  ".password-item__validation-checklist",
-);
-
-// Display password checklist on focus
-password.addEventListener("focus", () => {
-  passwordChecklist.style.display = "block";
-  checkPasswordValidation();
-});
-password.addEventListener("blur", () => {
-  passwordChecklist.style.display = "none";
-});
-
-// Check for password validation on each input
-password.addEventListener("input", checkPasswordValidation);
-
-// ADD CONFIRM PASSWORD VALIDATION
-const confirmPassword = document.querySelector(
-  ".form__input--confirm-password",
-);
+// Provides live confirm password validation
 confirmPassword.addEventListener("input", () => {
   showConfirmPasswordErrors();
+});
+
+// ADD FORM SUBMIT VALIDATION
+const form = document.querySelector(".form");
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let isFormValidated = true;
+
+  // Validate Email
+  if (!email.validity.valid) {
+    showEmailErrors();
+    isFormValidated = false;
+  }
+
+  // Validate Zipcode
+  if (zipcode.validity.valueMissing || zipcode.value.length < 5) {
+    showZipcodeErrors();
+    isFormValidated = false;
+  }
+
+  // Validate Password
+  const firstLetterCapitalRegex = /^[A-Z]/;
+  const atLeastOneNumberRegex = /\d/;
+  if (
+    password.value.length < 8 ||
+    !password.value.match(firstLetterCapitalRegex) ||
+    !password.value.match(atLeastOneNumberRegex)
+  ) {
+    passwordChecklist.style.display = "block";
+    checkPasswordValidation();
+    isFormValidated = false;
+  } else {
+    passwordChecklist.style.display = "none";
+  }
+
+  // Validate Confirm Password
+  if (
+    confirmPassword.validity.valueMissing ||
+    confirmPassword.value !== password.value
+  ) {
+    showConfirmPasswordErrors();
+    isFormValidated = false;
+  }
+
+  // SUBMIT FORM
+  if (isFormValidated === true) {
+    alert("High Five");
+  }
 });
